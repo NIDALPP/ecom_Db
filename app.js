@@ -1,0 +1,41 @@
+const express = require('express')
+const morgan = require('morgan')
+require('./helpers/init_mongodb')
+require('./helpers/init_redis')
+const createError = require('http-errors')
+require('dotenv').config()
+// const userRoute = require('./routes/user.route')
+const crudRoutes=require("./routes/crud")
+
+
+const app = express()
+app.use(morgan('dev'))
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+// app.use('/user', userRoute)
+app.use("/crud",crudRoutes)
+//debug request
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
+
+app.use(async (req, res, next) => {
+    next(createError.NotFound())
+})
+app.use((err, req, res, next) => {
+    res.status(err.status || 500)
+    res.send({
+        status: err.status || 500,
+        message: err.message
+    })
+})
+const port = process.env.PORT || 2000
+
+app.listen(port, () => {
+    console.log(`server is running on port ${port}`)
+})
+
