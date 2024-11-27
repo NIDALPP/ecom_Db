@@ -1,6 +1,7 @@
 const client = require("../helpers/init_redis")
 const User = require('../models/user.models')
 const Product= require('../models/products.models')
+const category=require('../models/category.models')
 const createError = require('http-errors')
 const bcrypt = require('bcrypt');
 const authSchema = require('../helpers/validation');
@@ -54,8 +55,4 @@ module.exports = {
             console.error("Error updating document:", error);
         }
     }
-
-
-
 };
-
