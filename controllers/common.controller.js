@@ -9,15 +9,15 @@ const { default: mongoose } = require("mongoose");
 
 module.exports = {
     findOne: async (req, res) => {
-        const { model, filter, projections } = req.body
+        const { model, filter={}, projections } = req.body
         if (!model || !filter) return res.send({ status: "failed", error: "invalid req" })
         let result = await mongoose.models[model].findOne(filter, projections)
         return res.send({ status: "success", data: result })
     },
     find: async (req, res) => {
-        const { model,  projections } = req.body
+        const { model, filter, projections } = req.body
         if (!model ) return res.send({ status: "failed", error: "invalid req" })
-        let result = await mongoose.models[model].find( projections)
+        let result = await mongoose.models[model].find(filter, projections)
         return res.send({ status: "success", data: result })
     },
     create: async (req, res) => {

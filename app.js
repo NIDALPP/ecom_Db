@@ -35,3 +35,15 @@ app.listen(port, () => {
     console.log(`server is running on port ${port}`)
 })
 
+// const mongoose = require('mongoose');
+
+// const resetDatabase = async () => {
+//     try {
+//         // Drop the entire database
+//         await mongoose.connection.dropDatabase();
+//         console.log('Database has been reset (all collections dropped).');
+//     } catch (error) {
+//         console.error('Error resetting database:', error);
+//     }
+// };
+// resetDatabase()
