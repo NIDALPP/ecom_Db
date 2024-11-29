@@ -33,10 +33,10 @@ module.exports = {
         }
     },
     deleteOne: async (req, res) => {
-        const { model, filter, projections } = req.body;
+        const { model, filter,} = req.body;
         if (!model || !filter) return res.send({ status: "failed", error: "invalid requirements" })
         try {
-            const result = await mongoose.models[model].deleteOne(filter, projections)
+            const result = await mongoose.models[model].deleteOne(filter,)
             return res.send({ status: "success", data: result })
         }catch(error){
             console.error("Error deleting document:", error);
