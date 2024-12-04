@@ -1,24 +1,55 @@
-const { number } = require('joi')
 const mongoose=require('mongoose')
+const Counter = require('./counterModel')
 const Schema=mongoose.Schema
 
 
 const orderSchema=new Schema({
-    id:{
-        type:Number,
-        unique:true,
-        indexedDB:true,
-        required:true
+    orderId:{
+        type:String,
+        unique:true
     },
-    quantity:{
-        type:Number,
+    userId:{
+        type:String,
         required:true
-    },
-    products:{
-        type:Number,
-        required:true
+        },
+        items: [
+            {
+                productId: {
+                    type: String,
+                    // ref: 'Product',
+                    // required: true,
+                },
+                quantity: {
+                    type: Number,
+                },
+                price: {
+                    type: Number,
+                    required: true
+                }
+            },
+        ],
+    status:{
+        type:String,
     }
 }
 )
-const Product=mongoose.model('Product',ProductSchema)
-module.exports=Product  
+orderSchema.pre('save', async function (next) {
+    const order = this
+    if (order.orderId) {
+        return next()
+    }
+    try {
+        const counter = await Counter.findByIdAndUpdate(
+            { _id: 'orderId' },
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true }
+        )
+        order.orderId=`ORD${String(counter.seq).padStart(3,'0')}`
+        next()
+    } catch (error) {
+        next(error)
+    }
+})
+
+const order=mongoose.model('order',orderSchema)
+module.exports=order  

@@ -1,13 +1,12 @@
 const mongoose=require('mongoose')
 const Schema=mongoose.Schema
 const Product =require('./products.models')
-const { required } = require('../helpers/validation')
+const Counter = require('./counterModel')
+const { string } = require('joi')
 const categorySchema= new Schema({
-    id:{
-        type:Number,
-        unique:true,
-        index:true,
-        required:true
+    categoryId:{
+        type:String,
+        unique:true
     },
     name:{
         unique:true,
@@ -15,15 +14,32 @@ const categorySchema= new Schema({
         required:true
     },
     parentId:{
-        type:Schema.Types.ObjectId,
-        ref:'Category',
+        type:String,
         default:null
     },
     products:{
-        type:[Schema.Types.ObjectId],
-        ref:'Product',
+        type:[String],
         default:null
         
+    }
+})
+
+categorySchema.pre('save', async function (next) {
+    const category = this
+    if (category.categoryId) {
+        return next()
+    }
+    try {
+        const counter = await Counter.findByIdAndUpdate(
+            { _id: 'categoryId' },
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true }
+        )
+
+        category.categoryId=`CAT${String(counter.seq).padStart(3,'0')}`
+        next()
+    } catch (error) {
+        next(error)
     }
 })
 const category=mongoose.model('Category',categorySchema)

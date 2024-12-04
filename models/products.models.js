@@ -1,9 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Category = require('./category.models'); 
+const Category = require('./category.models')
+const Counter = require('./counterModel');
+const { string } = require('joi');
 
 const ProductSchema = new Schema({
+    productId:{
+        type:String,
+        unique:true
+    },
     name: {
         type: String,
         required: true,
@@ -16,16 +22,27 @@ const ProductSchema = new Schema({
         type: Number,
         required: true,
     },
-    category: {
-        type: Schema.Types.ObjectId,  
-        ref: 'Category',  
-        required: true,   
+    category:{
+        type:String,
     },
-    
-});
-ProductSchema.virtual('availability').get(function () {
-    return this.stock > 0;
-});
+})
+ProductSchema.pre('save', async function (next) {
+    const product = this
+    if (product.productId) {
+        return next()
+    }
+    try {
+        const counter = await Counter.findByIdAndUpdate(
+            { _id: 'productId' },
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true }
+        )
+        product.productId=`PDT${String(counter.seq).padStart(3,'0')}`
+        next()
+    } catch (error) {
+        next(error)
+    }
+})
 
 const Product = mongoose.model('Product', ProductSchema);
 

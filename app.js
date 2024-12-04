@@ -1,7 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
 require('./helpers/init_mongodb')
-require('./helpers/init_redis')
 const createError = require('http-errors')
 require('dotenv').config()
 // const userRoute = require('./routes/user.route')

@@ -1,41 +1,68 @@
-const mongoose= require('mongoose')
-const Schema=mongoose.Schema
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
+const Counter = require('./counterModel')
+
+
+
+
 
 
 const userSchema = new Schema({
-    
-    name:{
-        type:String,
-        required:true,
+    userId: {
+        type: String,
+        unique: true
+    },
+
+    name: {
+        type: String,
+        required: true,
 
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
     },
-    role:{
-        type:String,
+    role: {
+        type: String,
         enum: ['user', 'admin']
     }
 
 })
 
-userSchema.methods.isValidPassword=async function(password){
-    try {
-        return await bcrypt.compare(password,this.password)
+userSchema.pre('save', async function (next) {
+    const user = this
+    if (user.userId) {
+        return next()
     }
-    catch(error){
+    try {
+        const counter = await Counter.findByIdAndUpdate(
+            { _id: 'userId' },
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true }
+        )
+        user.userId=`USR${String(counter.seq).padStart(3,'0')}`
+        next()
+    } catch (error) {
+        next(error)
+    }
+})
+
+userSchema.methods.isValidPassword = async function (password) {
+    try {
+        return await bcrypt.compare(password, this.password)
+    }
+    catch (error) {
         throw error
 
     }
 }
 
-const User=mongoose.model('User',userSchema)
-module.exports=User;
+const User = mongoose.model('User', userSchema)
+module.exports = User;

@@ -1,10 +1,9 @@
-const client = require("../helpers/init_redis")
 const User = require('../models/user.models')
 const Product= require('../models/products.models')
 const category=require('../models/category.models')
+const cart=require('../models/cartModel')
+const order=require('../models/orders.models')
 const createError = require('http-errors')
-const bcrypt = require('bcrypt');
-const authSchema = require('../helpers/validation');
 const { default: mongoose } = require("mongoose");
 
 module.exports = {
@@ -54,5 +53,19 @@ module.exports = {
         }catch(error){
             console.error("Error updating document:", error);
         }
+    },
+    findOneAndUpdate:async(req,res)=>{
+        const {model,filter,data} = req.body
+        if (!model) return res.send({ status: "failed", error: "couldn't find model" })
+            try {
+        const m = mongoose.models[model]
+
+        const result=await m.findOneAndUpdate(filter,{$set:data})
+        return res.send({ status: "success", data: result })
+                
+            } catch (error) {
+                console.error("Error updating document:", error);
+                
+            }
     }
 };
