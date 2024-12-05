@@ -10,7 +10,6 @@ const cartSchema = new Schema({
     },
     userId: {
         type: String,
-        ref: 'User',
         required: true,
         unique: true,
     },

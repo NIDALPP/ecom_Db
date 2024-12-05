@@ -16,8 +16,7 @@ const orderSchema=new Schema({
             {
                 productId: {
                     type: String,
-                    // ref: 'Product',
-                    // required: true,
+                    required: true,
                 },
                 quantity: {
                     type: Number,
@@ -30,7 +29,11 @@ const orderSchema=new Schema({
         ],
     status:{
         type:String,
-    }
+    },
+    totalAmount:{
+        type:Number,
+        required:true
+        },
 }
 )
 orderSchema.pre('save', async function (next) {
