@@ -17,8 +17,6 @@ const cartSchema = new Schema({
         {
             productId: {
                 type: String,
-                // ref: 'Product',
-                // required: true,
             },
             quantity: {
                 type: Number,

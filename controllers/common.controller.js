@@ -14,7 +14,7 @@ module.exports = {
         return res.send({ status: "success", data: result })
     },
     find: async (req, res) => {
-        const { model, filter, projections } = req.body
+        const { model, filter } = req.body
         if (!model ) return res.send({ status: "failed", error: "invalid req" })
         let result = await mongoose.models[model].find(filter, projections)
         return res.send({ status: "success", data: result })
