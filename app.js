@@ -3,7 +3,6 @@ const morgan = require('morgan')
 require('./helpers/init_mongodb')
 const createError = require('http-errors')
 require('dotenv').config()
-// const userRoute = require('./routes/user.route')
 const crudRoutes=require("./routes/crud")
 
 
@@ -12,8 +11,6 @@ app.use(morgan('dev'))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-// app.use('/user', userRoute)
 app.use("/crud",crudRoutes)
 
 
@@ -34,15 +31,15 @@ app.listen(port, () => {
     console.log(`server is running on port ${port}`)
 })
 
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-// const resetDatabase = async () => {
-//     try {
-//         // Drop the entire database
-//         await mongoose.connection.dropDatabase();
-//         console.log('Database has been reset (all collections dropped).');
-//     } catch (error) {
-//         console.error('Error resetting database:', error);
-//     }
-// };
+const resetDatabase = async () => {
+    try {
+        // Drop the entire database
+        await mongoose.connection.dropDatabase();
+        console.log('Database has been reset (all collections dropped).');
+    } catch (error) {
+        console.error('Error resetting database:', error);
+    }
+};
 // resetDatabase()

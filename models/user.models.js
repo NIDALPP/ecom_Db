@@ -3,11 +3,6 @@ const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 const Counter = require('./counterModel')
 
-
-
-
-
-
 const userSchema = new Schema({
     userId: {
         type: String,

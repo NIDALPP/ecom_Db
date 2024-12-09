@@ -2,7 +2,6 @@ const mongoose=require('mongoose')
 const Schema=mongoose.Schema
 const Product =require('./products.models')
 const Counter = require('./counterModel')
-const { string } = require('joi')
 const categorySchema= new Schema({
     categoryId:{
         type:String,
