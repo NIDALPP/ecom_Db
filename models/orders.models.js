@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 const Counter = require('./counterModel')
+const { required } = require('joi')
 const Schema=mongoose.Schema
 
 
@@ -7,6 +8,11 @@ const orderSchema=new Schema({
     orderId:{
         type:String,
         unique:true
+    },
+    address:{
+        type:String,
+        required:true
+
     },
     userId:{
         type:String,
