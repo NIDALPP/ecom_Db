@@ -23,6 +23,11 @@ const ProductSchema = new Schema({
     category:{
         type:String,
     },
+    image_url: {
+        type: String, 
+        required: false, 
+        default:null
+    }
 })
 ProductSchema.pre('save', async function (next) {
     const product = this

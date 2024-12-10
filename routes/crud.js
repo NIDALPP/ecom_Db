@@ -8,6 +8,6 @@ router.post("/findAll",controller.find)
 router.post("/create",controller.create)
 router.post("/deleteOne",controller.deleteOne)
 router.post("/updateOne",controller.updateOne)
-
+router.post("/records",controller.aggregate,)
 
 module.exports=router
